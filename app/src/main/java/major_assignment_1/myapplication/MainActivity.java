@@ -16,10 +16,12 @@ import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity implements  View.OnClickListener{
     // Vars given in project
-    private char mBoard[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
+    DatabaseHelper myDB;
+
+    private String mBoard[] = {" ", " ", " ", " ", " "," "," ", " ", " "};
     private final int BOARD_SIZE = 9;
-    public static final char HUMAN_PLAYER = 'X';
-    public static final char COMPUTER_PLAYER = 'O';
+    public static final String HUMAN_PLAYER = "X";
+    public static final String COMPUTER_PLAYER = "O";
     private Random mRand;
 
 
@@ -50,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        myDB= new DatabaseHelper(this);
 
         startButton = (Button) findViewById(R.id.startButton);
         GameStatusText = (TextView) findViewById(R.id.gameText);
@@ -73,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
         square9.setOnClickListener(this);
         createArray();
         GameStatusText.setText("PRESS NEW GAME TO BEGIN");
-
         startButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startNewGame();
@@ -101,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
         clearGrid();
         setStartingValues();
         for(int i=0;i!=9;i++){
-            mBoard[i]='N';
+            mBoard[i]=" ";
         }
     }
 
@@ -112,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
         gameOver = false;
         turn = 1;
         GameStatusText.setText("PLAYER TURN (X)");
-        gameStatus = "";
+        gameStatus = " ";
         HUMAN_TURN=true;
     }
 
@@ -160,52 +162,52 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
 
         // Check horizontal wins
         for (int i = 0; i <= 6; i += 3) {
-            if (mBoard[i] == HUMAN_PLAYER &&
-                    mBoard[i + 1] == HUMAN_PLAYER &&
-                    mBoard[i + 2] == HUMAN_PLAYER)
+            if (mBoard[i] .equals(HUMAN_PLAYER) &&
+                    mBoard[i + 1] .equals( HUMAN_PLAYER) &&
+                    mBoard[i + 2].equals( HUMAN_PLAYER))
 
                 return 2;
-            if (mBoard[i] == COMPUTER_PLAYER &&
-                    mBoard[i + 1] == COMPUTER_PLAYER &&
-                    mBoard[i + 2] == COMPUTER_PLAYER)
+            if (mBoard[i] .equals(COMPUTER_PLAYER) &&
+                    mBoard[i + 1].equals (COMPUTER_PLAYER) &&
+                    mBoard[i + 2] .equals(COMPUTER_PLAYER))
 
                 return 3;
         }
 
         // Check vertical wins
         for (int i = 0; i <= 2; i++) {
-            if (mBoard[i] == HUMAN_PLAYER &&
-                    mBoard[i + 3] == HUMAN_PLAYER &&
-                    mBoard[i + 6] == HUMAN_PLAYER)
+            if (mBoard[i].equals (HUMAN_PLAYER) &&
+                    mBoard[i + 3].equals (HUMAN_PLAYER) &&
+                    mBoard[i + 6].equals (HUMAN_PLAYER))
 
                 return 2;
-            if (mBoard[i] == COMPUTER_PLAYER &&
-                    mBoard[i + 3] == COMPUTER_PLAYER &&
-                    mBoard[i + 6] == COMPUTER_PLAYER)
+            if (mBoard[i] .equals (COMPUTER_PLAYER) &&
+                    mBoard[i + 3] .equals (COMPUTER_PLAYER) &&
+                    mBoard[i + 6] .equals (COMPUTER_PLAYER))
 
                 return 3;
         }
 
         // Check for diagonal wins
-        if ((mBoard[0] == HUMAN_PLAYER &&
-                mBoard[4] == HUMAN_PLAYER &&
-                mBoard[8] == HUMAN_PLAYER) ||
-                (mBoard[2] == HUMAN_PLAYER &&
-                        mBoard[4] == HUMAN_PLAYER &&
-                        mBoard[6] == HUMAN_PLAYER))
+        if ((mBoard[0] .equals ( HUMAN_PLAYER) &&
+                mBoard[4] .equals ( HUMAN_PLAYER) &&
+                mBoard[8] .equals ( HUMAN_PLAYER)) ||
+                (mBoard[2] .equals ( HUMAN_PLAYER )&&
+                        mBoard[4] .equals ( HUMAN_PLAYER )&&
+                        mBoard[6] .equals ( HUMAN_PLAYER)))
             return 2;
-        if ((mBoard[0] == COMPUTER_PLAYER &&
-                mBoard[4] == COMPUTER_PLAYER &&
-                mBoard[8] == COMPUTER_PLAYER) ||
-                (mBoard[2] == COMPUTER_PLAYER &&
-                        mBoard[4] == COMPUTER_PLAYER &&
-                        mBoard[6] == COMPUTER_PLAYER))
+        if ((mBoard[0] .equals ( COMPUTER_PLAYER) &&
+                mBoard[4] .equals ( COMPUTER_PLAYER) &&
+                mBoard[8] .equals ( COMPUTER_PLAYER)) ||
+                (mBoard[2] .equals ( COMPUTER_PLAYER) &&
+                        mBoard[4] .equals ( COMPUTER_PLAYER) &&
+                        mBoard[6] .equals ( COMPUTER_PLAYER)))
             return 3;
 
         // Check for tie
         for (int i = 0; i < BOARD_SIZE; i++) {
             // If we find a number, then no one has won yet
-            if (mBoard[i] != HUMAN_PLAYER && mBoard[i] != COMPUTER_PLAYER)
+            if (!mBoard[i].equals ( HUMAN_PLAYER) && !mBoard[i] .equals (COMPUTER_PLAYER))
                 return 0;
         }
 
@@ -214,30 +216,33 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
     }
 
     public void onClick(View v) {
-        if (gameOver == false) {
+        if (!gameOver) {
 
             if (HUMAN_TURN) {
                 switch (v.getId()) {
 
                     case R.id.square1:
-                        if (square1.getText().equals(" "))
+                        if (square1.getText().equals(" ")) {
                             square1.setText("X");
-                        HUMAN_TURN = false;
-                        mBoard[0] = HUMAN_PLAYER;
-                        //CHECK IF WIN
+                            HUMAN_TURN = false;
+                            mBoard[0] = HUMAN_PLAYER;
+                            //CHECK IF WIN
+                        }
 
                         break;
                     case R.id.square2:
-                        if (square2.getText().equals(" "))
+                        if (square2.getText().equals(" ")) {
                             square2.setText("X");
-                        HUMAN_TURN = false;
-                        mBoard[1] = HUMAN_PLAYER;
+                            HUMAN_TURN = false;
+                            mBoard[1] = HUMAN_PLAYER;
+                        }
                         break;
                     case R.id.square3:
-                        if (square3.getText() == " ")
+                        if (square3.getText() == " ") {
                             square3.setText("X");
-                        HUMAN_TURN = false;
-                        mBoard[2] = HUMAN_PLAYER;
+                            HUMAN_TURN = false;
+                            mBoard[2] = HUMAN_PLAYER;
+                        }
                         break;
                     case R.id.square4:
                         if (square4.getText().equals(" "))
@@ -246,39 +251,43 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
                         mBoard[3] = HUMAN_PLAYER;
                         break;
                     case R.id.square5:
-                        if (square5.getText().equals(" "))
+                        if (square5.getText().equals(" ")) {
                             square5.setText("X");
-                        HUMAN_TURN = false;
-                        mBoard[4] = HUMAN_PLAYER;
+                            HUMAN_TURN = false;
+                            mBoard[4] = HUMAN_PLAYER;
+                        }
                         break;
                     case R.id.square6:
-                        if (square6.getText().equals(" "))
+                        if (square6.getText().equals(" ")) {
                             square6.setText("X");
-                        HUMAN_TURN = false;
-                        mBoard[5] = HUMAN_PLAYER;
+                            HUMAN_TURN = false;
+                            mBoard[5] = HUMAN_PLAYER;
+                        }
                         break;
                     case R.id.square7:
-                        if (square7.getText().equals(" "))
+                        if (square7.getText().equals(" ")) {
                             square7.setText("X");
-                        HUMAN_TURN = false;
-                        mBoard[6] = HUMAN_PLAYER;
+                            HUMAN_TURN = false;
+                            mBoard[6] = HUMAN_PLAYER;
+                        }
                         break;
                     case R.id.square8:
-                        if (square8.getText().equals(" "))
+                        if (square8.getText().equals(" ")) {
                             square8.setText("X");
-                        HUMAN_TURN = false;
-                        mBoard[7] = HUMAN_PLAYER;
+                            HUMAN_TURN = false;
+                            mBoard[7] = HUMAN_PLAYER;
+                        }
                         break;
                     case R.id.square9:
-                        if (square9.getText().equals(" "))
+                        if (square9.getText().equals(" ")) {
                             square9.setText("X");
-                        HUMAN_TURN = false;
-                        mBoard[8] = HUMAN_PLAYER;
+                            HUMAN_TURN = false;
+                            mBoard[8] = HUMAN_PLAYER;
+                        }
                         break;
                 }
 
             }
-            GameStatusText.setText("COMPUTER TURN (O)");
             checkForGameOver();
             if (HUMAN_TURN == false && gameOver==false) {
 
@@ -296,8 +305,8 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
 
         // First see if there's a move O can make to win
         for (int i = 0; i < BOARD_SIZE; i++) {
-            if (mBoard[i] != HUMAN_PLAYER && mBoard[i] != COMPUTER_PLAYER) {
-                char curr = mBoard[i];
+            if (!mBoard[i] .equals ( HUMAN_PLAYER) && !mBoard[i] .equals ( COMPUTER_PLAYER)) {
+                String curr = mBoard[i];
                 mBoard[i] = COMPUTER_PLAYER;
 
 
@@ -313,8 +322,8 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
 
         // See if there's a move O can make to block X from winning
         for (int i = 0; i < BOARD_SIZE; i++) {
-            if (mBoard[i] != HUMAN_PLAYER && mBoard[i] != COMPUTER_PLAYER) {
-                char curr = mBoard[i];   // Save the current number
+            if (!mBoard[i] .equals ( HUMAN_PLAYER) && !mBoard[i] .equals ( COMPUTER_PLAYER)) {
+                String curr = mBoard[i];   // Save the current number
                 mBoard[i] = HUMAN_PLAYER;
                 if (checkForWinner() == 2) {
                     bBoard[i].setText("O");
@@ -330,13 +339,11 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
         do {
             mRand = new Random();
             move = mRand.nextInt(9);
-        } while (mBoard[move] == HUMAN_PLAYER || mBoard[move] == COMPUTER_PLAYER);
+        } while (mBoard[move] .equals ( HUMAN_PLAYER) || mBoard[move] .equals ( COMPUTER_PLAYER));
 
         bBoard[move].setText("O");
         mBoard[move]=COMPUTER_PLAYER;
         HUMAN_TURN=true;
     }
-
-
 }
 
