@@ -12,14 +12,22 @@ import android.util.Log;
  */
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-    public static final String DATABASE_NAME = "notifications.db";
-    public static final String TABLE_NAME = "notifications_table";
-    public static final String COL_1 = "ID";
-    public static final String COL_2 = "type";
-    public static final String COL_3 = "threshhold";
-    public static final String COL_4 = "time";
-    public static final String COL_5 = "email";
-    public static final String COL_6 = "phone";
+    public static final String DATABASE_NAME = "data.db";
+    public static final String TABLE_NAME = "data_table";
+    public static final String COL_0 = "array0";
+    public static final String COL_1 = "array1";
+    public static final String COL_2 = "array2";
+    public static final String COL_3 = "array3";
+    public static final String COL_4 = "array4";
+    public static final String COL_5 = "array5";
+    public static final String COL_6 = "array6";
+    public static final String COL_7 = "array7";
+    public static final String COL_8 = "array8";
+    public static final String COL_9 = "game_status";
+    public static final String COL_10 = "turn_number";
+    public static final String COL_11 = "game_over";
+
+
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -29,7 +37,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table " + TABLE_NAME + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, type TEXT, threshhold DOUBLE, time TEXT, email TEXT, phone TEXT)");
+        db.execSQL("create table " + TABLE_NAME + "(array0 TEXT, array1 TEXT, array2 TEXT, array3 TEXT, array4 TEXT, array5 TEXT, array6 TEXT, array7 TEXT, array8 TEXT, game_status TEXT, turn_number INTEGER, game_over TEXT)");
     }
 
     @Override
@@ -38,26 +46,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertData(String type, Double threshhold, long time, String email, String phone) {
+    public boolean insertData(String[] array, String status, int number, boolean gameOver) {
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COL_2, type);
-        contentValues.put(COL_3, threshhold);
-        contentValues.put(COL_4, time);
-        contentValues.put(COL_5, email);
-        contentValues.put(COL_6, phone);
+        String s="false";
+        if(gameOver){
+            s="true";
+        }
+        contentValues.put(COL_0, array[0]);
+        contentValues.put(COL_1, array[1]);
+        contentValues.put(COL_2, array[2]);
+        contentValues.put(COL_3, array[3]);
+        contentValues.put(COL_4, array[4]);
+        contentValues.put(COL_5, array[5]);
+        contentValues.put(COL_6, array[6]);
+        contentValues.put(COL_7, array[7]);
+        contentValues.put(COL_8, array[8]);
+        contentValues.put(COL_9, status);
+        contentValues.put(COL_10, number);
+        contentValues.put(COL_11, s);
         long result = db.insert(TABLE_NAME, null, contentValues);
         if (result == -1) {
-            Log.d("DATABASE TEST", "REFUND INSERTED TO DATABASE FAILED ");
 
             return false;
         } else {
-            if (type.equals("REFUND")) {
-                Log.d("DATABASE TEST", "REFUND INSERTED TO DATABASE");
-            }
-            if(type.equals("PERIODIC")){
-                Log.d("DATABASE TEST", "PERIODIC INSERTED TO DATABASE");
-            }
+
             return true;
         }
     }
